@@ -1,0 +1,56 @@
+#!/bin/bash
+
+msg() {
+  BRAN='\033[1;37m' && VERMELHO='\e[31m' && VERDE='\e[32m' && AMARELO='\e[33m'
+  AZUL='\e[34m' && MAGENTA='\e[35m' && MAG='\033[1;36m' && NEGRITO='\e[1m' && SEMCOR='\e[0m'
+  case $1 in
+  -ne) cor="${VERMELHO}${NEGRITO}" && echo -ne "${cor}${2}${SEMCOR}" ;;
+  -ama) cor="${AMARELO}${NEGRITO}" && echo -e "${cor}${2}${SEMCOR}" ;;
+  -verm) cor="${AMARELO}${NEGRITO}[!] ${VERMELHO}" && echo -e "${cor}${2}${SEMCOR}" ;;
+  -azu) cor="${MAG}${NEGRITO}" && echo -e "${cor}${2}${SEMCOR}" ;;
+  -verd) cor="${VERDE}${NEGRITO}" && echo -e "${cor}${2}${SEMCOR}" ;;
+  -bra) cor="${BRAN}${NEGRITO}" && echo -ne "${cor}${2}${SEMCOR}" ;;
+  "-bar2" | "-bar") cor="${AZUL}${NEGRITO}———————————————————————— ${2} ————————————————————————————" && echo -e "${SEMCOR}${cor}${SEMCOR}" ;;
+  esac
+}
+export -f msg
+
+inst_comp() {
+  msg -org "Menginstall $1"
+  [[ $(dpkg --get-selections | grep -w "$1" | head -1) ]] || apt-get install $1 -y &>/dev/null
+  tput cuu1 && tput dl1
+}
+
+persen() {
+  printf %.2f%% "$((10 ** 6 * $@))e-4"
+}
+
+install_all_component() {
+  plugin=$1
+  totalPLugin=$(wc -l <<<$plugin)
+  echo $plugin $totalPLugin
+  if [[ $totalPLugin == 0 ]]; then
+    msg -red "Tidak ada plugin yang di install"
+  else
+    msg -warn "${totalPLugin} plugin yang akan di install"
+    numm=1
+    for abc in $plugin; do
+      if [[ $abc != "" ]]; then
+        prsn=$(persen $numm/$totalPLugin)
+        msg -red "Proses Instalasi ${prsn}"
+        inst_comp $abc
+        let numm++
+        tput cuu1 && tput cuu1
+      fi
+    done
+    msg -gr "${totalPLugin} plugin yang akan di install [Selesai]"
+  fi
+}
+
+installModule() {
+  msg -ama "Untuk mempermudah user dalam mengupdate sistem"
+  echo "sudo apt-get update&&sudo apt-get upgrade -y&&sudo apt-get dist-upgrade -y&&sudo apt-get autoremove -y" >/bin/update && sudo chmod 777 /bin/update
+  msg -ama "Silahkan ketik, 'update' untuk mengupdate sistem" 
+}
+
+install_all_component $(cat ./plugin) && tput cuu1
