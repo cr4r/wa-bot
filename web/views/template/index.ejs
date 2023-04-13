@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('./headers.ejs')%>
+</head>
+
+<body class="has-navbar-vertical-aside navbar-vertical-aside-show-xl   footer-offset">
+  <%- include('./header.ejs')%>
+    <!-- ========== MAIN CONTENT ========== -->
+    <!-- Navbar Vertical -->
+    <%- include('./navbar.ejs')%>
+
+      <main id="content" role="main" class="main">
+        <!-- Content -->
+        <div class="content container-fluid">
+          <%- include(`../${indexnya}.ejs`)%>
+        </div>
+        <!-- End Content -->
+
+        <!-- Footer -->
+        <%- include('./footer.ejs')%>
+          <!-- End Footer -->
+      </main>
+      <!-- ========== END MAIN CONTENT ========== -->
+      <!-- <script src="/assets/js/demo.js"></script> -->
+      <%- include('./scripts.ejs')%>
+
+        <!-- ========== SECONDARY CONTENTS ========== -->
+        <%- include('../luarMain/tetap.ejs')%>
+          <%try{%>
+            <%- include(`../luarMain/${luarMain}.ejs`)%>
+              <%}catch{}%>
+
+                <!-- ========== END SECONDARY CONTENTS ========== -->
+</body>
+
+</html>

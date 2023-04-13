@@ -37,4 +37,4 @@ libnss3
 lsb-release
 xdg-utils
 wget
-knt
+dstat
